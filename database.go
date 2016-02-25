@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"math/rand"
 
 	_ "github.com/lib/pq"
 )
@@ -17,9 +18,10 @@ func InsertHashtag(db *sql.DB, hashtag string) {
 }
 
 func ShowAllHashtags(db *sql.DB) {
-	fmt.Println(" -> Querying")
+	fmt.Println("# Querying")
 	rows, err := db.Query("SELECT * FROM hashtags")
 	checkErr(err)
+	defer rows.Close()
 
 	fmt.Println(" hashtag | id ")
 
@@ -30,4 +32,21 @@ func ShowAllHashtags(db *sql.DB) {
 		checkErr(err)
 		fmt.Printf(" %v | %v \n", hashtag, id)
 	}
+}
+
+func SelectOneHashtag(db *sql.DB) {
+	fmt.Println("# Selecting Random Hashtag")
+
+	var numRows int
+	err := db.QueryRow("SELECT count(*) FROM hashtags").Scan(&numRows)
+	checkErr(err)
+
+	randInt := rand.Intn(numRows)
+
+	var hashtag string
+	err = db.QueryRow("SELECT hashtag FROM hashtags where id = $1", randInt).Scan(&hashtag)
+	checkErr(err)
+
+	fmt.Println(hashtag)
+
 }

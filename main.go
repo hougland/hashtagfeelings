@@ -16,9 +16,11 @@ func main() {
 	defer db.Close()
 
 	// temporarily hard coded
-	InsertHashtag(db, "#capstone")
+	// InsertHashtag(db, "#capstone")
 
 	ShowAllHashtags(db)
+
+	SelectOneHashtag(db)
 
 }
 
