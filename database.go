@@ -8,15 +8,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func InsertHashtag(db *sql.DB, hashtag string) {
-	fmt.Println("# Inserting values")
-
-	var lastInsertID int
-	err := db.QueryRow("INSERT INTO hashtags(hashtag) VALUES($1) returning id;", hashtag).Scan(&lastInsertID)
-	checkErr(err)
-	fmt.Println("last inserted id =", lastInsertID)
-}
-
+// this func is just for practice with databases and Go
 func ShowAllHashtags(db *sql.DB) {
 	fmt.Println("# Querying")
 	rows, err := db.Query("SELECT * FROM hashtags")
@@ -35,6 +27,9 @@ func ShowAllHashtags(db *sql.DB) {
 }
 
 func SelectOneHashtag(db *sql.DB) {
+	// does the randomly generating numbers thing actually work?
+	// needs to be altered to return the hashtag
+
 	fmt.Println("# Selecting Random Hashtag")
 
 	var numRows int
@@ -48,5 +43,18 @@ func SelectOneHashtag(db *sql.DB) {
 	checkErr(err)
 
 	fmt.Println(hashtag)
+}
 
+func SaveSentiment() {
+	// save sentiment object in database
+	// will be similar to InsertHashtag func
+}
+
+func InsertHashtag(db *sql.DB, hashtag string) {
+	fmt.Println("# Inserting values")
+
+	var lastInsertID int
+	err := db.QueryRow("INSERT INTO hashtags(hashtag) VALUES($1) returning id;", hashtag).Scan(&lastInsertID)
+	checkErr(err)
+	fmt.Println("last inserted id =", lastInsertID)
 }

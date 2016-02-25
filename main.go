@@ -26,6 +26,10 @@ func main() {
 
 func checkErr(err error) {
 	if err != nil {
-		panic(err)
+		if err == sql.ErrNoRows {
+			fmt.Println("No results found")
+		} else {
+			panic(err)
+		}
 	}
 }
