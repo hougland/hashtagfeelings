@@ -8,6 +8,15 @@ import (
 	_ "github.com/lib/pq"
 )
 
+func OpenDBConnection() *sql.DB {
+	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
+	db, err := sql.Open("postgres", dbinfo)
+	checkErr(err)
+	defer db.Close()
+
+	return db
+}
+
 // this func is just for practice with databases and Go
 func ShowAllHashtags(db *sql.DB) {
 	fmt.Println("# Querying")
@@ -26,7 +35,7 @@ func ShowAllHashtags(db *sql.DB) {
 	}
 }
 
-func SelectOneHashtag(db *sql.DB) {
+func SelectOneHashtag(db *sql.DB) string {
 	// does the randomly generating numbers thing actually work?
 	// needs to be altered to return the hashtag
 
@@ -42,7 +51,7 @@ func SelectOneHashtag(db *sql.DB) {
 	err = db.QueryRow("SELECT hashtag FROM hashtags where id = $1", randInt).Scan(&hashtag)
 	checkErr(err)
 
-	fmt.Println(hashtag)
+	return hashtag
 }
 
 func SaveSentiment() {

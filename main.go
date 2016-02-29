@@ -10,13 +10,7 @@ import (
 func main() {
 	SetEnvVars() // from local, untracked env.go file which sets secrets
 
-	trends := GetTrends()
-
-	// for _, trend := range trends {
-	// 	GetTweets(trend)
-	// }
-
-	GetTweets(trends[0])
+	// GetTweets(trends[0])
 
 }
 
@@ -30,9 +24,24 @@ func checkErr(err error) {
 	}
 }
 
-func openDBConnection() {
-	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
-	db, err := sql.Open("postgres", dbinfo)
-	checkErr(err)
-	defer db.Close()
+func updateHashtags() {
+	// open db
+	// db := OpenDBConnection()
+
+	// get trends
+	trends := GetTrends()
+
+	// get tweets for each trend
+	for _, trend := range trends {
+		GetTweets(trend)
+	}
+
+	// clean tweets for each trend
+
+	// send tweets for each trend to sentiment analysis api
+
+	// check if sentiment is strong enough to save in db
+
+	// save in db
+
 }
