@@ -4,7 +4,27 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/ChimeraCoder/anaconda"
 )
+
+func GetWorldWideTrends() {
+	// not sure why Getenv doesn't work - need to investigate
+	// consumerKey := os.Getenv("CONSUMER_KEY")
+	// consumerSecret := os.Getenv("CONSUMER_SECRET")
+	// accessToken := os.Getenv("ACCESS_TOKEN")
+	// accessTokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
+
+	// this works when hard coded. YAY!
+	anaconda.SetConsumerKey("")
+	anaconda.SetConsumerSecret("")
+	api := anaconda.NewTwitterApi("", "")
+	trends, err := api.GetTrendsByPlace(1, nil)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%v", trends.Trends)
+}
 
 func GetTrends() {
 	// returns array of worldwide trends

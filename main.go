@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -17,8 +16,7 @@ func main() {
 	// checkErr(err)
 	// defer db.Close()
 
-	fmt.Println("Testing:", os.Getenv("CONSUMER_KEY"))
-
+	GetWorldWideTrends()
 }
 
 func checkErr(err error) {
