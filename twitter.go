@@ -1,20 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/ChimeraCoder/anaconda"
 )
 
-type Trend struct {
-	Name            string `json:"name"`
-	Query           string `json:"query"`
-	Url             string `json:"url"`
-	PromotedContent string `json:"promoted_content"`
-}
-
-func GetTrends() {
+func GetTrends() []anaconda.Trend {
 	consumerKey := os.Getenv("CONSUMER_KEY")
 	consumerSecret := os.Getenv("CUSTOMER_SECRET")
 	accessToken := os.Getenv("ACCESS_TOKEN")
@@ -23,17 +15,17 @@ func GetTrends() {
 	anaconda.SetConsumerSecret(consumerSecret)
 	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
 
-	trends, err := api.GetTrendsByPlace(1, nil)
+	trendResponse, err := api.GetTrendsByPlace(1, nil)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%v", trends.Trends)
+
+	return trendResponse.Trends
 }
 
-func GetTweets() {
-	// accepts a single trends obj (?)
-	// returns array (?) of popular tweets with a particular hashtag
-	var trend = Trend{"#golang", "%23golang", "http://twitter.com/search?q=%23GoLang", ""}
+func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
+	// accepts a single trends obj
+	// returns array of popular tweets with a particular hashtag
 
 	consumerKey := os.Getenv("CONSUMER_KEY")
 	consumerSecret := os.Getenv("CUSTOMER_SECRET")
@@ -47,8 +39,11 @@ func GetTweets() {
 	if err != nil {
 		panic(err)
 	}
-	for _, tweet := range searchResult.Statuses {
-		fmt.Println(tweet.Text)
-	}
+
+	return searchResult.Statuses
 
 }
+
+// func CleanTweets(SearchResponse) {
+// 	// accepts a single
+// }
