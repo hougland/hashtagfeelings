@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/url"
 	"os"
 
 	"github.com/ChimeraCoder/anaconda"
@@ -25,7 +26,7 @@ func GetTrends() []anaconda.Trend {
 
 func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
 	// accepts a single trends obj
-	// returns array of popular tweets with a particular hashtag
+	// currently returns 15 tweets - need to make them the popular ones
 
 	consumerKey := os.Getenv("CONSUMER_KEY")
 	consumerSecret := os.Getenv("CUSTOMER_SECRET")
@@ -35,15 +36,21 @@ func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
 	anaconda.SetConsumerSecret(consumerSecret)
 	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
 
-	searchResult, err := api.GetSearch(trend.Query, nil)
+	v := url.Values{}
+	v.Set("result_type", "popular")
+	v.Set("lang", "en")
+	v.Set("count", "50")
+
+	searchResult, err := api.GetSearch(trend.Query, v)
 	if err != nil {
 		panic(err)
 	}
 
 	return searchResult.Statuses
-
 }
 
-// func CleanTweets(SearchResponse) {
-// 	// accepts a single
+// func CleanTweets(tweets []anaconda.Tweet) []anaconda.Tweet {
+// acceps slice of Tweets
+// returns a slice of "clean" Tweets (remove special characters, etc.)
+// Tweets ready to send to sentiment analysis
 // }
