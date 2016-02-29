@@ -10,13 +10,7 @@ import (
 func main() {
 	SetEnvVars() // from local, untracked env.go file which sets secrets
 
-	// Open connection to db:
-	// dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
-	// db, err := sql.Open("postgres", dbinfo)
-	// checkErr(err)
-	// defer db.Close()
-
-	GetWorldWideTrends()
+	GetTrends()
 }
 
 func checkErr(err error) {
@@ -27,4 +21,11 @@ func checkErr(err error) {
 			panic(err)
 		}
 	}
+}
+
+func openDBConnection() {
+	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
+	db, err := sql.Open("postgres", dbinfo)
+	checkErr(err)
+	defer db.Close()
 }
