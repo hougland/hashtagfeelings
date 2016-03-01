@@ -10,9 +10,9 @@ import (
 func main() {
 	SetEnvVars() // from local, untracked env.go file which sets secrets
 
-	// trends := GetTrends()
-	// tweets := GetTweets(trends[0])
-	SentimentAnalysis()
+	trends := GetTrends()
+	tweets := GetTweets(trends[0])
+	SentimentAnalysis(tweets[0])
 }
 
 func checkErr(err error) {

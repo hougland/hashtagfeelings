@@ -18,23 +18,16 @@ type SentimentQuery struct {
 	Data [][]byte `json:"data"`
 }
 
-func SentimentAnalysis() {
+func SentimentAnalysis(tweet anaconda.Tweet) {
 	// returns sentiment object (?) - positive, negative, and an intensity of sentiment
 
-	// sentimentQuery := &SentimentQuery{Data: BuildSentimentQuery(tweetSlice)}
-	// urlData := url.Values{}
-	// urlData.Set("search_query", "pixar")
-	// resp, err := http.Post("http://example.com/upload", "image/jpeg", &buf)
-	// func (c *Client) Post(url string, bodyType string, body io.Reader) (resp *Response, err error)
-	// req, err := http.Post("http://www.sentiment140.com/api/bulkClassifyJson", "application/json", strings.NewReader(urlData.Encode()))
-	// if err != nil {
-	// 	panic(err)
-	// }
+	jsonStr := FormatTweet(tweet)
 
 	url := "http://www.sentiment140.com/api/bulkClassifyJson"
 	fmt.Println("URL:>", url)
 
-	var jsonStr = []byte(`{"data":[{"text":"Buy cheese and bread for breakfast."}]}`)
+	// var jsonStr = []byte(`{"data":[{"text":"Buy cheese and bread for breakfast."}]}`)
+	fmt.Println(string(jsonStr))
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -56,9 +49,9 @@ func SentimentAnalysis() {
 
 }
 
-func IsSentimental() {
-	// accepts sentiment object, returns true/false based on if semtiment strong enough to save
-}
+// func IsSentimental() {
+// 	// accepts sentiment object, returns true/false based on if semtiment strong enough to save
+// }
 
 func FormatTweet(tweet anaconda.Tweet) []byte {
 	tweetStruct := &TweetText{Text: tweet.Text}
@@ -71,17 +64,17 @@ func FormatTweet(tweet anaconda.Tweet) []byte {
 	return marshaledTweet
 }
 
-func BuildSentimentQuery(tweetSlice []anaconda.Tweet) [][]byte {
-	var querySlice [][]byte
-
-	for _, tweet := range tweetSlice {
-		marshaledTweet := FormatTweet(tweet)
-		querySlice = append(querySlice, marshaledTweet)
-	}
-
-	for _, query := range querySlice {
-		fmt.Println(string(query))
-	}
-
-	return querySlice
-}
+// func BuildSentimentQuery(tweetSlice []anaconda.Tweet) [][]byte {
+// 	var querySlice [][]byte
+//
+// 	for _, tweet := range tweetSlice {
+// 		marshaledTweet := FormatTweet(tweet)
+// 		querySlice = append(querySlice, marshaledTweet)
+// 	}
+//
+// 	for _, query := range querySlice {
+// 		fmt.Println(string(query))
+// 	}
+//
+// 	return querySlice
+// }
