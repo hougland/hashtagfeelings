@@ -10,21 +10,9 @@ import (
 func main() {
 	SetEnvVars() // from local, untracked env.go file which sets secrets
 
-	trends := GetTrends()
-	fmt.Println(len(trends))
-	fmt.Println(trends[0])
-	tweets := GetTweets(trends[0])
-	fmt.Println(len(tweets))
-	fmt.Println(tweets[0])
-
+	// trends := GetTrends()
 	// tweets := GetTweets(trends[0])
-	// fmt.Println(trends[0].Name)
-	// fmt.Println(len(tweets))
-	//
-	// for _, tweet := range tweets {
-	// 	fmt.Println(tweet.Text)
-	// }
-
+	SentimentAnalysis()
 }
 
 func checkErr(err error) {
