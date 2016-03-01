@@ -15,8 +15,9 @@ func GetTrends() []anaconda.Trend {
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
 	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+	defer api.Close()
 
-	trendResponse, err := api.GetTrendsByPlace(1, nil)
+	trendResponse, err := api.GetTrendsByPlace(23424977, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -25,9 +26,6 @@ func GetTrends() []anaconda.Trend {
 }
 
 func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
-	// accepts a single trends obj
-	// currently returns 15 tweets - need to make them the popular ones
-
 	consumerKey := os.Getenv("CONSUMER_KEY")
 	consumerSecret := os.Getenv("CUSTOMER_SECRET")
 	accessToken := os.Getenv("ACCESS_TOKEN")
@@ -35,9 +33,10 @@ func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
 	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+	defer api.Close()
 
 	v := url.Values{}
-	v.Set("result_type", "popular")
+	v.Set("result_type", "mixed")
 	v.Set("lang", "en")
 	v.Set("count", "50")
 
@@ -53,4 +52,17 @@ func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
 // acceps slice of Tweets
 // returns a slice of "clean" Tweets (remove special characters, etc.)
 // Tweets ready to send to sentiment analysis
+
+// example of testing values of a type
+// func (signature *Signature) valid() bool {
+//     return len(signature.FirstName) > 0 &&
+//         len(signature.LastName) > 0 &&
+//         len(signature.Email) > 0 &&
+//         signature.Age >= 18 && signature.Age <= 180 &&
+//         len(signature.Message) < 140
+// }
+// }
+
+// func CleanTrends() {
+// 	// accepts single trend, verifies that it's english
 // }
