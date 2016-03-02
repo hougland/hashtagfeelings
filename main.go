@@ -8,11 +8,7 @@ import (
 )
 
 func main() {
-	SetEnvVars() // from local, untracked env.go file which sets secrets
-
-	db := OpenDBConnection()
-	defer db.Close()
-
+	updateHashtags()
 }
 
 func updateHashtags() {
@@ -23,17 +19,14 @@ func updateHashtags() {
 	// get trends
 	trends := GetTrends()
 
-	// for each trend, get it's tweets, run sentiment analysis, save in db
+	// for each trend, get its tweets, run sentiment analysis, save in db
 	for _, trend := range trends {
 		tweets := GetTweets(trend)
 		isSentimental, whichSentiment := SentimentAnalysis(tweets)
-		if isSentimental && whichSentiment == "positive" {
-			// save in pos_hashtags table
-		} else if isSentimental && whichSentiment == "negative" {
-			// save in neg_hashtags table
+		if isSentimental {
+			InsertHashtag(db, trend.Name, whichSentiment)
 		}
 	}
-
 }
 
 func checkErr(err error) {

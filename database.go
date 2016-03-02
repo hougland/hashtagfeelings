@@ -53,16 +53,14 @@ func SelectOneHashtag(db *sql.DB) string {
 	return hashtag
 }
 
-func SaveSentiment() {
-	// save sentiment object in database
-	// will be similar to InsertHashtag func
-}
+func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
+	// err := db.QueryRow("INSERT INTO hashtags(hashtag, sentiment) VALUES($1, $2);", hashtag, sentiment).Scan(&lastInsertID)
+	// checkErr(err)
 
-func InsertHashtag(db *sql.DB, hashtag string) {
-	fmt.Println("# Inserting values")
-
-	var lastInsertID int
-	err := db.QueryRow("INSERT INTO pos_hashtags(hashtag) VALUES($1) returning id;", hashtag).Scan(&lastInsertID)
+	stmt, err := db.Prepare("INSERT INTO hashtags(hashtag, sentiment) VALUES($1, $2);")
 	checkErr(err)
-	fmt.Println("last inserted id =", lastInsertID)
+	defer stmt.Close()
+
+	_, err = stmt.Exec(hashtag, sentiment)
+	checkErr(err)
 }
