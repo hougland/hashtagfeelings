@@ -8,7 +8,10 @@ import (
 )
 
 func main() {
+	SetEnvVars() // from local, untracked env.go file which sets secrets
+
 	updateHashtags()
+
 }
 
 func updateHashtags() {
@@ -27,6 +30,7 @@ func updateHashtags() {
 			InsertHashtag(db, trend.Name, whichSentiment)
 		}
 	}
+
 }
 
 func checkErr(err error) {
