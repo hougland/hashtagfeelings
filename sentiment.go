@@ -40,7 +40,7 @@ func FormatTweet(tweet anaconda.Tweet) TweetText {
 	return tweetStruct
 }
 
-func SentimentAnalysis(tweets []anaconda.Tweet) SentimentQuery {
+func SentimentAnalysis(tweets []anaconda.Tweet) (bool, string) {
 	query := CreateSentimentQuery(tweets)
 	jsonStr, err := json.Marshal(query)
 	if err != nil {
@@ -72,11 +72,13 @@ func SentimentAnalysis(tweets []anaconda.Tweet) SentimentQuery {
 		panic(err)
 	}
 
-	return unmarshaledQuery
+	score := GetScore(unmarshaledQuery)
+	isSentimental, whichSentiment := IsSentimental(score)
+
+	return isSentimental, whichSentiment
 }
 
 func IsSentimental(total float64) (bool, string) {
-	// accepts sentiment object, returns true/false based on if semtiment strong enough to save
 	if total >= 2.8 {
 		return true, "positive"
 	} else if total <= 1.2 {

@@ -12,7 +12,6 @@ func OpenDBConnection() *sql.DB {
 	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
 	db, err := sql.Open("postgres", dbinfo)
 	checkErr(err)
-	defer db.Close()
 
 	return db
 }
@@ -63,7 +62,7 @@ func InsertHashtag(db *sql.DB, hashtag string) {
 	fmt.Println("# Inserting values")
 
 	var lastInsertID int
-	err := db.QueryRow("INSERT INTO hashtags(hashtag) VALUES($1) returning id;", hashtag).Scan(&lastInsertID)
+	err := db.QueryRow("INSERT INTO pos_hashtags(hashtag) VALUES($1) returning id;", hashtag).Scan(&lastInsertID)
 	checkErr(err)
 	fmt.Println("last inserted id =", lastInsertID)
 }

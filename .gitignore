@@ -40,3 +40,4 @@ Icon
 *.csv
 
 env.go
+sqlcode.md
