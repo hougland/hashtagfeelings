@@ -38,7 +38,7 @@ func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
 	v := url.Values{}
 	v.Set("result_type", "mixed")
 	v.Set("lang", "en")
-	v.Set("count", "10")
+	v.Set("count", "50")
 
 	searchResult, err := api.GetSearch(trend.Query, v)
 	if err != nil {
