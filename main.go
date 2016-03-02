@@ -11,8 +11,13 @@ func main() {
 	SetEnvVars() // from local, untracked env.go file which sets secrets
 
 	trends := GetTrends()
-	tweets := GetTweets(trends[0])
-	SentimentAnalysis(tweets)
+	tweets := GetTweets(trends[1])
+	sentiments := SentimentAnalysis(tweets)
+	score := GetScore(sentiments)
+	isIt, sentimentalType := IsSentimental(score)
+	fmt.Println(isIt)
+	fmt.Println(sentimentalType)
+
 }
 
 func checkErr(err error) {
