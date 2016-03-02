@@ -11,7 +11,13 @@ import (
 )
 
 type TweetText struct {
-	Text string `json:"text"`
+	Text     string         `json:"text"`
+	Polarity int            `json:"polarity"`
+	Meta     *MetaSentiment `json:"meta"`
+}
+
+type MetaSentiment struct {
+	Language string `json:"language"`
 }
 
 type SentimentQuery struct {
@@ -62,6 +68,10 @@ func SentimentAnalysis(tweets []anaconda.Tweet) {
 		panic(err)
 	}
 	fmt.Println(string(body))
+	fmt.Printf("type of body: %T", body)
+	fmt.Println(body)
+
+	// return body
 
 }
 
