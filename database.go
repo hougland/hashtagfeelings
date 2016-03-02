@@ -4,13 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 	"math/rand"
+	"os"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
 )
 
 func OpenDBConnection() *sql.DB {
-	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
+	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_PASSWORD"), "BluePenguin", "hashtagfeelings")
 	db, err := sql.Open("postgres", dbinfo)
 	checkErr(err)
 
