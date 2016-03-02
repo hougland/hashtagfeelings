@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 
+	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
 )
 
@@ -14,6 +15,27 @@ func OpenDBConnection() *sql.DB {
 	checkErr(err)
 
 	return db
+}
+
+func IsInTable(db *sql.DB, trend anaconda.Trend) bool {
+	var id int
+	err := db.QueryRow("SELECT id FROM hashtags WHERE hashtag = $1", trend.Name).Scan(&id)
+	if err == nil {
+		return true
+	} else if err == sql.ErrNoRows {
+		return false
+	} else {
+		panic(err)
+	}
+}
+
+func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
+	stmt, err := db.Prepare("INSERT INTO hashtags(hashtag, sentiment) VALUES($1, $2);")
+	checkErr(err)
+	defer stmt.Close()
+
+	_, err = stmt.Exec(hashtag, sentiment)
+	checkErr(err)
 }
 
 // this func is just for practice with databases and Go
@@ -51,16 +73,4 @@ func SelectOneHashtag(db *sql.DB) string {
 	checkErr(err)
 
 	return hashtag
-}
-
-func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
-	// err := db.QueryRow("INSERT INTO hashtags(hashtag, sentiment) VALUES($1, $2);", hashtag, sentiment).Scan(&lastInsertID)
-	// checkErr(err)
-
-	stmt, err := db.Prepare("INSERT INTO hashtags(hashtag, sentiment) VALUES($1, $2);")
-	checkErr(err)
-	defer stmt.Close()
-
-	_, err = stmt.Exec(hashtag, sentiment)
-	checkErr(err)
 }

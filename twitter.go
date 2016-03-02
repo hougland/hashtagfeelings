@@ -7,7 +7,7 @@ import (
 	"github.com/ChimeraCoder/anaconda"
 )
 
-func GetTrends() []anaconda.Trend {
+func connectWithApi() *anaconda.TwitterApi {
 	consumerKey := os.Getenv("CONSUMER_KEY")
 	consumerSecret := os.Getenv("CUSTOMER_SECRET")
 	accessToken := os.Getenv("ACCESS_TOKEN")
@@ -15,6 +15,12 @@ func GetTrends() []anaconda.Trend {
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
 	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+
+	return api
+}
+
+func GetTrends() []anaconda.Trend {
+	api := connectWithApi()
 	defer api.Close()
 
 	trendResponse, err := api.GetTrendsByPlace(23424977, nil)
@@ -26,13 +32,7 @@ func GetTrends() []anaconda.Trend {
 }
 
 func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
-	consumerKey := os.Getenv("CONSUMER_KEY")
-	consumerSecret := os.Getenv("CUSTOMER_SECRET")
-	accessToken := os.Getenv("ACCESS_TOKEN")
-	accessTokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
-	anaconda.SetConsumerKey(consumerKey)
-	anaconda.SetConsumerSecret(consumerSecret)
-	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+	api := connectWithApi()
 	defer api.Close()
 
 	v := url.Values{}
@@ -47,22 +47,3 @@ func GetTweets(trend anaconda.Trend) []anaconda.Tweet {
 
 	return searchResult.Statuses
 }
-
-// func CleanTweets(tweets []anaconda.Tweet) []anaconda.Tweet {
-// acceps slice of Tweets
-// returns a slice of "clean" Tweets (remove special characters, etc.)
-// Tweets ready to send to sentiment analysis
-
-// example of testing values of a type
-// func (signature *Signature) valid() bool {
-//     return len(signature.FirstName) > 0 &&
-//         len(signature.LastName) > 0 &&
-//         len(signature.Email) > 0 &&
-//         signature.Age >= 18 && signature.Age <= 180 &&
-//         len(signature.Message) < 140
-// }
-// }
-
-// func CleanTrends() {
-// 	// accepts single trend, verifies that it's english
-// }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 
 	_ "github.com/lib/pq"
@@ -9,9 +8,7 @@ import (
 
 func main() {
 	SetEnvVars() // from local, untracked env.go file which sets secrets
-
 	updateHashtags()
-
 }
 
 func updateHashtags() {
@@ -22,12 +19,14 @@ func updateHashtags() {
 	// get trends
 	trends := GetTrends()
 
-	// for each trend, get its tweets, run sentiment analysis, save in db
+	// for each trend, make sure it's not in db, get its tweets, run sentiment analysis, save in db
 	for _, trend := range trends {
-		tweets := GetTweets(trend)
-		isSentimental, whichSentiment := SentimentAnalysis(tweets)
-		if isSentimental {
-			InsertHashtag(db, trend.Name, whichSentiment)
+		if IsInTable(db, trend) == false {
+			tweets := GetTweets(trend)
+			isSentimental, whichSentiment := SentimentAnalysis(tweets)
+			if isSentimental {
+				InsertHashtag(db, trend.Name, whichSentiment)
+			}
 		}
 	}
 
@@ -35,10 +34,7 @@ func updateHashtags() {
 
 func checkErr(err error) {
 	if err != nil {
-		if err == sql.ErrNoRows {
-			fmt.Println("No results found")
-		} else {
-			panic(err)
-		}
+		fmt.Println(err)
+		panic(err)
 	}
 }
