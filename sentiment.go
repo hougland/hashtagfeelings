@@ -15,19 +15,35 @@ type TweetText struct {
 }
 
 type SentimentQuery struct {
-	Data [][]byte `json:"data"`
+	Data []*TweetText `json:"data"`
 }
 
-func SentimentAnalysis(tweet anaconda.Tweet) {
-	// returns sentiment object (?) - positive, negative, and an intensity of sentiment
+func CreateSentimentQuery(tweets []anaconda.Tweet) SentimentQuery {
+	var query SentimentQuery
 
-	jsonStr := FormatTweet(tweet)
+	for _, tweet := range tweets {
+		query.Data = append(query.Data, FormatTweet(tweet))
+	}
+
+	return query
+}
+
+func FormatTweet(tweet anaconda.Tweet) *TweetText {
+	tweetStruct := &TweetText{Text: tweet.Text}
+
+	return tweetStruct
+}
+
+func SentimentAnalysis(tweets []anaconda.Tweet) {
+	// returns sentiment object (?) - positive, negative, and an intensity of sentiment
+	query := CreateSentimentQuery(tweets)
+	jsonStr, err := json.Marshal(query)
+	if err != nil {
+		panic(err)
+	}
 
 	url := "http://www.sentiment140.com/api/bulkClassifyJson"
-	fmt.Println("URL:>", url)
 
-	// var jsonStr = []byte(`{"data":[{"text":"Buy cheese and bread for breakfast."}]}`)
-	fmt.Println(string(jsonStr))
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -51,30 +67,4 @@ func SentimentAnalysis(tweet anaconda.Tweet) {
 
 // func IsSentimental() {
 // 	// accepts sentiment object, returns true/false based on if semtiment strong enough to save
-// }
-
-func FormatTweet(tweet anaconda.Tweet) []byte {
-	tweetStruct := &TweetText{Text: tweet.Text}
-
-	marshaledTweet, err := json.Marshal(tweetStruct)
-	if err != nil {
-		panic(err)
-	}
-
-	return marshaledTweet
-}
-
-// func BuildSentimentQuery(tweetSlice []anaconda.Tweet) [][]byte {
-// 	var querySlice [][]byte
-//
-// 	for _, tweet := range tweetSlice {
-// 		marshaledTweet := FormatTweet(tweet)
-// 		querySlice = append(querySlice, marshaledTweet)
-// 	}
-//
-// 	for _, query := range querySlice {
-// 		fmt.Println(string(query))
-// 	}
-//
-// 	return querySlice
 // }

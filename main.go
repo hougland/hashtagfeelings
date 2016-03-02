@@ -12,7 +12,7 @@ func main() {
 
 	trends := GetTrends()
 	tweets := GetTweets(trends[0])
-	SentimentAnalysis(tweets[0])
+	SentimentAnalysis(tweets)
 }
 
 func checkErr(err error) {
