@@ -17,7 +17,6 @@ func Positive(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(hashtag); err != nil {
 		panic(err)
 	}
-
 }
 
 func Negative(w http.ResponseWriter, r *http.Request) {

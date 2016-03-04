@@ -10,7 +10,7 @@ import (
 )
 
 type Hashtag struct {
-	Name      string `json:"string"`
+	Name      string `json:"name"`
 	Sentiment string `json:"sentiment"`
 	ID        int    `json:"id"`
 }
@@ -45,8 +45,6 @@ func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
 }
 
 func SelectRandomHashtag(db *sql.DB) Hashtag {
-	fmt.Println("# Selecting Random Hashtag")
-
 	var numRows int
 	err := db.QueryRow("SELECT count(*) FROM hashtags").Scan(&numRows)
 	checkErr(err)
