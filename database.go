@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"math/rand"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
@@ -44,16 +43,16 @@ func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
 	checkErr(err)
 }
 
-func SelectRandomHashtag(db *sql.DB) Hashtag {
-	var numRows int
-	err := db.QueryRow("SELECT count(*) FROM hashtags").Scan(&numRows)
-	checkErr(err)
-
-	randInt := rand.Intn(numRows)
-
+func SelectRandomHashtag(db *sql.DB, sentiment string) Hashtag {
 	var hashtag Hashtag
-	err = db.QueryRow("SELECT * FROM hashtags where id = $1", randInt).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
+	err := db.QueryRow("SELECT * FROM hashtags WHERE sentiment = $1 ORDER BY random()", sentiment).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
 	checkErr(err)
+
+	// randInt := rand.Intn(numRows)
+	//
+	// var hashtag Hashtag
+	// err = db.QueryRow("SELECT * FROM hashtags WHERE id = $1", randInt).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
+	// checkErr(err)
 
 	return hashtag
 }
