@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	SetEnvVars() // from local, untracked env.go file which sets secrets
+	// SetEnvVars() // from local, untracked env.go file which sets secrets
+	router := NewRouter()
+
+	log.Fatal(http.ListenAndServe(":5000", router))
 }
 
 func updateHashtags() {

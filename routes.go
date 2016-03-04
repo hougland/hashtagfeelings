@@ -15,13 +15,13 @@ var routes = Routes{
 	Route{
 		"Positive",
 		"GET",
-		"/",
+		"/positive",
 		Positive,
 	},
 	Route{
 		"Negative",
 		"GET",
-		"/todos",
+		"/negative",
 		Negative,
 	},
 }
