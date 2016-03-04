@@ -6,11 +6,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func main() {
-	SetEnvVars() // from local, untracked env.go file which sets secrets
-	OpenDBConnection()
-}
-
 func updateHashtags() {
 	// open db
 	db := OpenDBConnection()
@@ -29,7 +24,6 @@ func updateHashtags() {
 			}
 		}
 	}
-
 }
 
 func checkErr(err error) {

@@ -11,7 +11,7 @@ import (
 )
 
 func OpenDBConnection() *sql.DB {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_PASSWORD"), "BluePenguin", "hashtagfeelings")
+	dbinfo := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", "BluePenguin", "hashtagfeelings", os.Getenv("DB_PASSWORD"))
 	db, err := sql.Open("postgres", dbinfo)
 	checkErr(err)
 
