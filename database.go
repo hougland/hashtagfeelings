@@ -4,14 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 	"math/rand"
-	"os"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
 )
 
 func OpenDBConnection() *sql.DB {
-	dbinfo := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", "BluePenguin", "hashtagfeelings", os.Getenv("DB_PASSWORD"))
+	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
 	db, err := sql.Open("postgres", dbinfo)
 	checkErr(err)
 
@@ -57,10 +56,7 @@ func ShowAllHashtags(db *sql.DB) {
 	}
 }
 
-func SelectOneHashtag(db *sql.DB) string {
-	// does the randomly generating numbers thing actually work?
-	// needs to be altered to return the hashtag
-
+func SelectRandomHashtag(db *sql.DB) string {
 	fmt.Println("# Selecting Random Hashtag")
 
 	var numRows int

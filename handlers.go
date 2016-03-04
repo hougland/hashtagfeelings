@@ -7,7 +7,9 @@ import (
 )
 
 func Positive(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Positive, %q", html.EscapeString(r.URL.Path))
+	db := OpenDBConnection()
+	hashtag := SelectRandomHashtag(db)
+	fmt.Printf("hashtag: %v", hashtag)
 }
 
 func Negative(w http.ResponseWriter, r *http.Request) {
