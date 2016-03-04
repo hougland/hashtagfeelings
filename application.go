@@ -5,15 +5,25 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
 	SetEnvVars() // from local, untracked env.go file which sets secrets
-	// updateHashtags()
-	router := NewRouter()
-	log.Fatal(http.ListenAndServe(":5000", router))
+	updateHashtags()
+
+	f, _ := os.Create("/var/log/golang/golang-server.log")
+	defer f.Close()
+	log.SetOutput(f)
+
+	http.HandleFunc("/positive", Positive)
+	http.HandleFunc("/negative", Negative)
+
+	log.Printf("Listening on port 5000")
+	http.ListenAndServe(":5000", nil)
+
 }
 
 func updateHashtags() {
