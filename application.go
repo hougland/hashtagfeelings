@@ -2,17 +2,21 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	// SetEnvVars() // from local, untracked env.go file which sets secrets
-	router := NewRouter()
+	SetEnvVars() // from local, untracked env.go file which sets secrets
 
-	log.Fatal(http.ListenAndServe(":5000", router))
+	db := OpenDBConnection()
+	hashtag := SelectRandomHashtag(db)
+
+	fmt.Printf("hashtag: %v", hashtag)
+	fmt.Printf("type of hashtag: %T", hashtag)
+
+	// router := NewRouter()
+	// log.Fatal(http.ListenAndServe(":5000", router))
 }
 
 func updateHashtags() {

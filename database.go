@@ -9,6 +9,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type Hashtag struct {
+	Name      string `json:"string"`
+	Sentiment string `json:"sentiment"`
+	ID        int    `json:"id"`
+}
+
 func OpenDBConnection() *sql.DB {
 	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
 	db, err := sql.Open("postgres", dbinfo)
@@ -38,25 +44,7 @@ func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
 	checkErr(err)
 }
 
-// this func is just for practice with databases and Go
-func ShowAllHashtags(db *sql.DB) {
-	fmt.Println("# Querying")
-	rows, err := db.Query("SELECT * FROM hashtags")
-	checkErr(err)
-	defer rows.Close()
-
-	fmt.Println(" hashtag | id ")
-
-	for rows.Next() {
-		var id int
-		var hashtag string
-		err = rows.Scan(&hashtag, &id)
-		checkErr(err)
-		fmt.Printf(" %v | %v \n", hashtag, id)
-	}
-}
-
-func SelectRandomHashtag(db *sql.DB) string {
+func SelectRandomHashtag(db *sql.DB) Hashtag {
 	fmt.Println("# Selecting Random Hashtag")
 
 	var numRows int
@@ -65,8 +53,8 @@ func SelectRandomHashtag(db *sql.DB) string {
 
 	randInt := rand.Intn(numRows)
 
-	var hashtag string
-	err = db.QueryRow("SELECT hashtag FROM hashtags where id = $1", randInt).Scan(&hashtag)
+	var hashtag Hashtag
+	err = db.QueryRow("SELECT * FROM hashtags where id = $1", randInt).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
 	checkErr(err)
 
 	return hashtag
