@@ -48,11 +48,5 @@ func SelectRandomHashtag(db *sql.DB, sentiment string) Hashtag {
 	err := db.QueryRow("SELECT * FROM hashtags WHERE sentiment = $1 ORDER BY random()", sentiment).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
 	checkErr(err)
 
-	// randInt := rand.Intn(numRows)
-	//
-	// var hashtag Hashtag
-	// err = db.QueryRow("SELECT * FROM hashtags WHERE id = $1", randInt).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
-	// checkErr(err)
-
 	return hashtag
 }

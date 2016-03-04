@@ -79,9 +79,9 @@ func SentimentAnalysis(tweets []anaconda.Tweet) (bool, string) {
 }
 
 func IsSentimental(total float64) (bool, string) {
-	if total >= 2.8 {
+	if total >= 2.9 {
 		return true, "positive"
-	} else if total <= 1.2 {
+	} else if total <= 1.4 {
 		return true, "negative"
 	} else {
 		return false, ""

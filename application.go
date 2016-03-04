@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 
 func main() {
 	SetEnvVars() // from local, untracked env.go file which sets secrets
-
+	// updateHashtags()
 	router := NewRouter()
 	log.Fatal(http.ListenAndServe(":5000", router))
 }
@@ -37,7 +38,11 @@ func updateHashtags() {
 
 func checkErr(err error) {
 	if err != nil {
-		fmt.Println(err)
-		panic(err)
+		if err == sql.ErrNoRows {
+			// should add an error message in the json
+		} else {
+			fmt.Println(err)
+			panic(err)
+		}
 	}
 }
