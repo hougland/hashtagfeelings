@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
@@ -15,8 +14,8 @@ type Hashtag struct {
 }
 
 func OpenDBConnection() *sql.DB {
-	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable", "BluePenguin", "hashtagfeelings")
-	db, err := sql.Open("postgres", dbinfo)
+	db, err := sql.Open("postgres", "user=BluePenguin dbname=ebdb sslmode=disable")
+
 	checkErr(err)
 
 	return db
@@ -34,19 +33,19 @@ func IsInTable(db *sql.DB, trend anaconda.Trend) bool {
 	}
 }
 
-func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
-	stmt, err := db.Prepare("INSERT INTO hashtags(hashtag, sentiment) VALUES($1, $2);")
-	checkErr(err)
-	defer stmt.Close()
+// func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
+// 	stmt, err := db.Prepare("INSERT INTO hashtags(hashtag, sentiment) VALUES($1, $2);")
+// 	checkErr(err)
+// 	defer stmt.Close()
+//
+// 	_, err = stmt.Exec(hashtag, sentiment)
+// 	checkErr(err)
+// }
 
-	_, err = stmt.Exec(hashtag, sentiment)
-	checkErr(err)
-}
-
-func SelectRandomHashtag(db *sql.DB, sentiment string) Hashtag {
-	var hashtag Hashtag
-	err := db.QueryRow("SELECT * FROM hashtags WHERE sentiment = $1 ORDER BY random()", sentiment).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
-	checkErr(err)
-
-	return hashtag
-}
+// func SelectRandomHashtag(db *sql.DB, sentiment string) Hashtag {
+// 	var hashtag Hashtag
+// 	err := db.QueryRow("SELECT * FROM hashtags WHERE sentiment = $1 ORDER BY random()", sentiment).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
+// 	checkErr(err)
+//
+// 	return hashtag
+// }
