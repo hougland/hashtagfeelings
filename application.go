@@ -1,18 +1,21 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
-
-	"github.com/gorilla/mux"
+	"os"
 )
 
 func main() {
-	r := mux.NewRouter()
-	r.HandleFunc("/", Positive)
-	r.HandleFunc("/n", Negative)
+	http.HandleFunc("/", Positive)
+	http.HandleFunc("/n", Negative)
 
-	http.ListenAndServe(":5000", nil)
+	fmt.Println("listening...")
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func checkErr(err error) {
@@ -20,4 +23,30 @@ func checkErr(err error) {
 		fmt.Println(err)
 		panic(err)
 	}
+}
+
+func Positive(w http.ResponseWriter, r *http.Request) {
+	profile := Profile{"Alex", []string{"snowboarding", "programming"}}
+
+	js, err := json.Marshal(profile)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+}
+
+func Negative(w http.ResponseWriter, r *http.Request) {
+	profile := Profile{"Ricky", []string{"cats", "cats"}}
+
+	js, err := json.Marshal(profile)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
