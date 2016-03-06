@@ -21,15 +21,6 @@ func Positive(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
-
-	// db := OpenDBConnection()
-	// hashtag := SelectRandomHashtag(db, "positive")
-	//
-	// w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	// w.WriteHeader(http.StatusOK)
-	// if err := json.NewEncoder(w).Encode(hashtag); err != nil {
-	// 	panic(err)
-	// }
 }
 
 func Negative(w http.ResponseWriter, r *http.Request) {
@@ -43,13 +34,4 @@ func Negative(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
-
-	// db := OpenDBConnection()
-	// hashtag := SelectRandomHashtag(db, "negative")
-	//
-	// w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	// w.WriteHeader(http.StatusOK)
-	// if err := json.NewEncoder(w).Encode(hashtag); err != nil {
-	// 	panic(err)
-	// }
 }
