@@ -6,11 +6,10 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/positive", Positive)
-	http.HandleFunc("/negative", Negative)
+	http.HandleFunc("/p", Positive)
+	http.HandleFunc("/n", Negative)
 
 	http.ListenAndServe(":5000", nil)
-
 }
 
 func checkErr(err error) {
