@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 type Profile struct {
@@ -16,7 +17,7 @@ func main() {
 	http.HandleFunc("/n", Negative)
 
 	fmt.Println("listening...")
-	err := http.ListenAndServe(":5000", nil)
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
 		panic(err)
 	}
