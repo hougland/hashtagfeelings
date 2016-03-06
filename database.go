@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"os"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
@@ -14,7 +15,7 @@ type Hashtag struct {
 }
 
 func OpenDBConnection() *sql.DB {
-	db, err := sql.Open("postgres", "user=BluePenguin dbname=ebdb sslmode=disable")
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 
 	checkErr(err)
 
