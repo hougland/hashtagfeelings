@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", Positive)
-	http.HandleFunc("/n", Negative)
+	http.HandleFunc("/positive", Positive)
+	http.HandleFunc("/negative", Negative)
 	http.HandleFunc("/updatehashtags", Updated)
 
 	fmt.Println("listening...")
