@@ -14,7 +14,9 @@ func main() {
 	http.HandleFunc("/updatehashtags", Updated)
 
 	fmt.Println("listening...")
+	fmt.Println(os.Getenv("PORT"))
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	fmt.Println("post listenandserve")
 	if err != nil {
 		panic(err)
 	}

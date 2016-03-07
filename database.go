@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 
 	"github.com/ChimeraCoder/anaconda"
@@ -14,12 +15,28 @@ type Hashtag struct {
 	ID        []uint8 `json:"id"`
 }
 
+func EnsureDBIsOpen() *sql.DB {
+	db := OpenDBConnection()
+	return db
+}
+
 func OpenDBConnection() *sql.DB {
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("RDS_USERNAME"), os.Getenv("RDS_PASSWORD"), os.Getenv("RDS_DB_NAME"), os.Getenv("RDS_HOSTNAME"), os.Getenv("RDS_PORT"))
+	db, err := sql.Open("postgres", dbinfo)
+	checkErr(err)
+
+	// createTable, err := db.Prepare("CREATE TABLE hashtags (id serial primary key, hashtag varchar(180) unique, sentiment char(9));")
+	// checkErr(err)
+
+	res, err := db.Exec("CREATE TABLE hashtags (id serial primary key, hashtag varchar(180) unique, sentiment char(9));")
 	checkErr(err)
 
 	return db
 }
+
+// ensure db connection is open func
+// store db object
+// if no db obj, calls open + checks tables, creates if none exist
 
 func ViewRows(db *sql.DB) []Hashtag {
 	rows, err := db.Query("SELECT * FROM hashtags")
