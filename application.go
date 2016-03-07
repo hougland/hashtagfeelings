@@ -31,16 +31,17 @@ func checkErr(err error) {
 }
 
 func Positive(w http.ResponseWriter, r *http.Request) {
-	profile := Profile{"Alex", []string{"snowboarding", "programming"}}
+	db := OpenDBConnection()
+	userinfo := ViewRows(db)
 
-	js, err := json.Marshal(profile)
+	js, err := json.Marshal(userinfo)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		panic(err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
+
 }
 
 func Negative(w http.ResponseWriter, r *http.Request) {
