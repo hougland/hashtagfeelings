@@ -80,9 +80,10 @@ func Negative(w http.ResponseWriter, r *http.Request) {
 func Updated(w http.ResponseWriter, r *http.Request) {
 	updateHashtags()
 	db := OpenDBConnection()
-	userinfo := ViewRows(db)
+	hashtags := ViewRows(db)
+	defer db.Close()
 
-	js, err := json.Marshal(userinfo)
+	js, err := json.Marshal(hashtags)
 	if err != nil {
 		panic(err)
 	}

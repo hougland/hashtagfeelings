@@ -29,21 +29,21 @@ func OpenDBConnection() *sql.DB {
 	return db
 }
 
-func ViewRows(db *sql.DB) []Userinfo {
-	rows, err := db.Query("SELECT * FROM userinfo")
+func ViewRows(db *sql.DB) []Hashtag {
+	rows, err := db.Query("SELECT * FROM hashtags")
 	checkErr(err)
 	defer rows.Close()
 
-	var userinfos []Userinfo
+	var hashtags []Hashtag
 
 	for rows.Next() {
-		var userinfo Userinfo
-		err = rows.Scan(&userinfo.Uid, &userinfo.Username, &userinfo.Department, &userinfo.Created)
+		var hashtag Hashtag
+		err = rows.Scan(&hashtag.Name, &hashtag.Sentiment, &hashtag.ID)
 		checkErr(err)
-		userinfos = append(userinfos, userinfo)
+		hashtags = append(hashtags, hashtag)
 	}
 
-	return userinfos
+	return hashtags
 }
 
 func IsInTable(db *sql.DB, trend anaconda.Trend) bool {
