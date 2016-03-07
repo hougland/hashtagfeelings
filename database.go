@@ -9,9 +9,9 @@ import (
 )
 
 type Hashtag struct {
-	Name      string `json:"name"`
-	Sentiment string `json:"sentiment"`
-	ID        int    `json:"id"`
+	Name      string  `json:"name"`
+	Sentiment string  `json:"sentiment"`
+	ID        []uint8 `json:"id"`
 }
 
 func OpenDBConnection() *sql.DB {
