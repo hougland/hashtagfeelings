@@ -8,6 +8,7 @@ import (
 func Positive(w http.ResponseWriter, r *http.Request) {
 	db := OpenDBConnection()
 	hashtag := SelectRandomHashtag(db, "positive")
+	defer db.Close()
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
@@ -19,6 +20,7 @@ func Positive(w http.ResponseWriter, r *http.Request) {
 func Negative(w http.ResponseWriter, r *http.Request) {
 	db := OpenDBConnection()
 	hashtag := SelectRandomHashtag(db, "negative")
+	defer db.Close()
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
