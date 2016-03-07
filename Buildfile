@@ -1,1 +1,1 @@
-make: go build -o bin/application
+make: ./script.sh
