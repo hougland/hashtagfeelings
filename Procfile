@@ -1,1 +1,1 @@
-web: hashtagfeelings
+web: bin/application
