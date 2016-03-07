@@ -7,7 +7,11 @@ import (
 	"os"
 )
 
+var db *sql.DB
+
 func main() {
+	db = OpenDBConnection()
+
 	http.HandleFunc("/", ViewAllRows)
 	http.HandleFunc("/positive", Positive)
 	http.HandleFunc("/negative", Negative)

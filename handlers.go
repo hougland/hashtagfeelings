@@ -6,8 +6,8 @@ import (
 )
 
 func ViewAllRows(w http.ResponseWriter, r *http.Request) {
-	db := OpenDBConnection()
-	defer db.Close()
+	// db := OpenDBConnection()
+	// defer db.Close()
 
 	hashtags := ViewRows(db)
 
@@ -31,9 +31,9 @@ func Positive(w http.ResponseWriter, r *http.Request) {
 }
 
 func Negative(w http.ResponseWriter, r *http.Request) {
-	db := OpenDBConnection()
+	// db := OpenDBConnection()
 	hashtag := SelectRandomHashtag(db, "negative")
-	defer db.Close()
+	// defer db.Close()
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
@@ -44,9 +44,9 @@ func Negative(w http.ResponseWriter, r *http.Request) {
 
 func Updated(w http.ResponseWriter, r *http.Request) {
 	updateHashtags()
-	db := OpenDBConnection()
+	// db := OpenDBConnection()
 	hashtags := ViewRows(db)
-	defer db.Close()
+	// defer db.Close()
 
 	js, err := json.Marshal(hashtags)
 	if err != nil {
@@ -59,8 +59,8 @@ func Updated(w http.ResponseWriter, r *http.Request) {
 
 func updateHashtags() {
 	// open db
-	db := OpenDBConnection()
-	defer db.Close()
+	// db := OpenDBConnection()
+	// defer db.Close()
 
 	// get trends
 	trends := GetTrends()

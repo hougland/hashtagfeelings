@@ -4,39 +4,33 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
 )
 
 type Hashtag struct {
-	Name      string  `json:"name"`
-	Sentiment string  `json:"sentiment"`
-	ID        []uint8 `json:"id"`
-}
-
-func EnsureDBIsOpen() *sql.DB {
-	db := OpenDBConnection()
-	return db
+	Name      string    `json:"name"`
+	Sentiment string    `json:"sentiment"`
+	ID        []uint8   `json:"id"`
+	Created   time.Time `json:"created"`
 }
 
 func OpenDBConnection() *sql.DB {
 	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("RDS_USERNAME"), os.Getenv("RDS_PASSWORD"), os.Getenv("RDS_DB_NAME"), os.Getenv("RDS_HOSTNAME"), os.Getenv("RDS_PORT"))
-	db, err := sql.Open("postgres", dbinfo)
+	database, err := sql.Open("postgres", dbinfo)
 	checkErr(err)
 
-	// createTable, err := db.Prepare("CREATE TABLE hashtags (id serial primary key, hashtag varchar(180) unique, sentiment char(9));")
-	// checkErr(err)
+	CreateTable(database)
 
-	res, err := db.Exec("CREATE TABLE hashtags (id serial primary key, hashtag varchar(180) unique, sentiment char(9));")
-	checkErr(err)
-
-	return db
+	return database
 }
 
-// ensure db connection is open func
-// store db object
-// if no db obj, calls open + checks tables, creates if none exist
+func CreateTable(database *sql.DB) {
+	_, err := database.Exec("CREATE TABLE IF NOT EXISTS hashtags (id serial primary key, hashtag varchar(180) unique, sentiment char(9));")
+	checkErr(err)
+}
 
 func ViewRows(db *sql.DB) []Hashtag {
 	rows, err := db.Query("SELECT * FROM hashtags")
