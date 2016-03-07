@@ -5,6 +5,19 @@ import (
 	"net/http"
 )
 
+func ViewAllRows(w http.ResponseWriter, r *http.Request) {
+	db := OpenDBConnection()
+	defer db.Close()
+
+	hashtags := ViewRows(db)
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(hashtags); err != nil {
+		panic(err)
+	}
+}
+
 func Positive(w http.ResponseWriter, r *http.Request) {
 	db := OpenDBConnection()
 	hashtag := SelectRandomHashtag(db, "positive")

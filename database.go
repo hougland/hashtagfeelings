@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"os"
-	"time"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
@@ -13,13 +12,6 @@ type Hashtag struct {
 	Name      string `json:"name"`
 	Sentiment string `json:"sentiment"`
 	ID        int    `json:"id"`
-}
-
-type Userinfo struct {
-	Uid        int       `json:"uid"`
-	Username   string    `json:"username"`
-	Department string    `json:"department"`
-	Created    time.Time `json:"created"`
 }
 
 func OpenDBConnection() *sql.DB {
