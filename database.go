@@ -4,35 +4,39 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
 )
 
 type Hashtag struct {
-	Name      string    `json:"name"`
-	Sentiment string    `json:"sentiment"`
-	ID        []uint8   `json:"id"`
-	Created   time.Time `json:"created"`
+	Name      string  `json:"name"`
+	Sentiment string  `json:"sentiment"`
+	ID        []uint8 `json:"id"`
 }
 
-func OpenDBConnection() *sql.DB {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("RDS_USERNAME"), os.Getenv("RDS_PASSWORD"), os.Getenv("RDS_DB_NAME"), os.Getenv("RDS_HOSTNAME"), os.Getenv("RDS_PORT"))
-	database, err := sql.Open("postgres", dbinfo)
-	checkErr(err)
+func OpenDBIfClosed() *sql.DB {
+	var err error
 
-	CreateTable(database)
+	if db == nil {
+		dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("RDS_USERNAME"), os.Getenv("RDS_PASSWORD"), os.Getenv("RDS_DB_NAME"), os.Getenv("RDS_HOSTNAME"), os.Getenv("RDS_PORT"))
+		db, err = sql.Open("postgres", dbinfo)
+		checkErr(err)
+	}
 
-	return database
+	err = db.Ping()
+	if err != nil {
+		dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("RDS_USERNAME"), os.Getenv("RDS_PASSWORD"), os.Getenv("RDS_DB_NAME"), os.Getenv("RDS_HOSTNAME"), os.Getenv("RDS_PORT"))
+		db, err = sql.Open("postgres", dbinfo)
+		checkErr(err)
+	}
+
+	return db
 }
 
-func CreateTable(database *sql.DB) {
-	_, err := database.Exec("CREATE TABLE IF NOT EXISTS hashtags (id serial primary key, hashtag varchar(180) unique, sentiment char(9));")
-	checkErr(err)
-}
+func ViewRows() []Hashtag {
+	db = OpenDBIfClosed()
 
-func ViewRows(db *sql.DB) []Hashtag {
 	rows, err := db.Query("SELECT * FROM hashtags")
 	checkErr(err)
 	defer rows.Close()
@@ -49,7 +53,9 @@ func ViewRows(db *sql.DB) []Hashtag {
 	return hashtags
 }
 
-func IsInTable(db *sql.DB, trend anaconda.Trend) bool {
+func IsInTable(trend anaconda.Trend) bool {
+	db = OpenDBIfClosed()
+
 	var id int
 	err := db.QueryRow("SELECT id FROM hashtags WHERE hashtag = $1", trend.Name).Scan(&id)
 	if err == nil {
@@ -61,7 +67,9 @@ func IsInTable(db *sql.DB, trend anaconda.Trend) bool {
 	}
 }
 
-func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
+func InsertHashtag(hashtag string, sentiment string) {
+	db = OpenDBIfClosed()
+
 	stmt, err := db.Prepare("INSERT INTO hashtags(hashtag, sentiment) VALUES($1, $2);")
 	checkErr(err)
 	defer stmt.Close()
@@ -70,7 +78,9 @@ func InsertHashtag(db *sql.DB, hashtag string, sentiment string) {
 	checkErr(err)
 }
 
-func SelectRandomHashtag(db *sql.DB, sentiment string) Hashtag {
+func SelectRandomHashtag(sentiment string) Hashtag {
+	db = OpenDBIfClosed()
+
 	var hashtag Hashtag
 	err := db.QueryRow("SELECT * FROM hashtags WHERE sentiment = $1 ORDER BY random()", sentiment).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
 	checkErr(err)

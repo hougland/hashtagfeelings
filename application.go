@@ -10,20 +10,17 @@ import (
 var db *sql.DB
 
 func main() {
-	db = OpenDBConnection()
+	fmt.Println("starting app")
+	db = OpenDBIfClosed()
 
 	http.HandleFunc("/", ViewAllRows)
 	http.HandleFunc("/positive", Positive)
 	http.HandleFunc("/negative", Negative)
 	http.HandleFunc("/updatehashtags", Updated)
 
-	fmt.Println("listening...")
-	fmt.Println(os.Getenv("PORT"))
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
-	fmt.Println("post listenandserve")
-	if err != nil {
-		panic(err)
-	}
+
+	checkErr(err)
 }
 
 func checkErr(err error) {

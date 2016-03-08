@@ -6,10 +6,7 @@ import (
 )
 
 func ViewAllRows(w http.ResponseWriter, r *http.Request) {
-	// db := OpenDBConnection()
-	// defer db.Close()
-
-	hashtags := ViewRows(db)
+	hashtags := ViewRows()
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
@@ -19,8 +16,7 @@ func ViewAllRows(w http.ResponseWriter, r *http.Request) {
 }
 
 func Positive(w http.ResponseWriter, r *http.Request) {
-	db := OpenDBConnection()
-	hashtag := SelectRandomHashtag(db, "positive")
+	hashtag := SelectRandomHashtag("positive")
 	defer db.Close()
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -31,9 +27,7 @@ func Positive(w http.ResponseWriter, r *http.Request) {
 }
 
 func Negative(w http.ResponseWriter, r *http.Request) {
-	// db := OpenDBConnection()
-	hashtag := SelectRandomHashtag(db, "negative")
-	// defer db.Close()
+	hashtag := SelectRandomHashtag("negative")
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
@@ -44,9 +38,8 @@ func Negative(w http.ResponseWriter, r *http.Request) {
 
 func Updated(w http.ResponseWriter, r *http.Request) {
 	updateHashtags()
-	// db := OpenDBConnection()
-	hashtags := ViewRows(db)
-	// defer db.Close()
+
+	hashtags := ViewRows()
 
 	js, err := json.Marshal(hashtags)
 	if err != nil {
@@ -58,20 +51,16 @@ func Updated(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateHashtags() {
-	// open db
-	// db := OpenDBConnection()
-	// defer db.Close()
-
 	// get trends
 	trends := GetTrends()
 
 	// for each trend, make sure it's not in db, get its tweets, run sentiment analysis, save in db
 	for _, trend := range trends {
-		if IsInTable(db, trend) == false {
+		if IsInTable(trend) == false {
 			tweets := GetTweets(trend)
 			isSentimental, whichSentiment := SentimentAnalysis(tweets)
 			if isSentimental {
-				InsertHashtag(db, trend.Name, whichSentiment)
+				InsertHashtag(trend.Name, whichSentiment)
 			}
 		}
 	}
