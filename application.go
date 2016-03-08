@@ -10,6 +10,8 @@ import (
 var db *sql.DB
 
 func main() {
+	Scheduler()
+
 	fmt.Println("starting app")
 	db = OpenDBIfClosed()
 
@@ -21,6 +23,22 @@ func main() {
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 
 	checkErr(err)
+}
+
+func UpdateHashtags() {
+	// get trends
+	trends := GetTrends()
+
+	// for each trend, make sure it's not in db, get its tweets, run sentiment analysis, save in db
+	for _, trend := range trends {
+		if IsInTable(trend) == false {
+			tweets := GetTweets(trend)
+			isSentimental, whichSentiment := SentimentAnalysis(tweets)
+			if isSentimental {
+				InsertHashtag(trend.Name, whichSentiment)
+			}
+		}
+	}
 }
 
 func checkErr(err error) {

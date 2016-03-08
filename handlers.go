@@ -37,7 +37,7 @@ func Negative(w http.ResponseWriter, r *http.Request) {
 }
 
 func Updated(w http.ResponseWriter, r *http.Request) {
-	updateHashtags()
+	UpdateHashtags()
 
 	hashtags := ViewRows()
 
@@ -48,20 +48,4 @@ func Updated(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
-}
-
-func updateHashtags() {
-	// get trends
-	trends := GetTrends()
-
-	// for each trend, make sure it's not in db, get its tweets, run sentiment analysis, save in db
-	for _, trend := range trends {
-		if IsInTable(trend) == false {
-			tweets := GetTweets(trend)
-			isSentimental, whichSentiment := SentimentAnalysis(tweets)
-			if isSentimental {
-				InsertHashtag(trend.Name, whichSentiment)
-			}
-		}
-	}
 }
