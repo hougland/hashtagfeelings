@@ -88,3 +88,31 @@ func SelectRandomHashtag(sentiment string) Hashtag {
 
 	return hashtag
 }
+
+func PurgeDB(sentiment string) {
+	db = OpenDBIfClosed()
+
+	rows, err := db.Query("SELECT * FROM hashtags WHERE sentiment = $1", sentiment)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return
+		} else {
+			fmt.Println(err)
+			panic(err)
+		}
+	}
+
+	// var results []*sql.Rows
+
+	for rows.Next() {
+
+	}
+
+}
+
+// get all rows for a certain sentiment
+// if there's only 1 row, don't do anything else
+// count how many rows there are
+// if less than 10, return
+// sort the rows by created date? (can I do this with a string?)
+// delete whatever's left after first 10 rows
