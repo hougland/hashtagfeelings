@@ -43,9 +43,7 @@ func FormatTweet(tweet anaconda.Tweet) TweetText {
 func SentimentAnalysis(tweets []anaconda.Tweet) (bool, string) {
 	query := CreateSentimentQuery(tweets)
 	jsonStr, err := json.Marshal(query)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 
 	url := "http://www.sentiment140.com/api/bulkClassifyJson"
 
@@ -55,22 +53,16 @@ func SentimentAnalysis(tweets []anaconda.Tweet) (bool, string) {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 
 	var unmarshaledQuery SentimentQuery
 	err = json.Unmarshal(body, &unmarshaledQuery)
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
+	checkErr(err)
 
 	score := GetScore(unmarshaledQuery)
 	isSentimental, whichSentiment := IsSentimental(score)
@@ -101,9 +93,9 @@ func GetScore(sentimentObj SentimentQuery) float64 {
 	}
 
 	total := scores / numTweets
-	fmt.Printf("numTweets: %v", numTweets)
-	fmt.Printf("scores: %v", scores)
-	fmt.Printf("total: %v", total)
+	fmt.Printf("numTweets: %v ", numTweets)
+	fmt.Printf("scores: %v ", scores)
+	fmt.Printf("total: %v \n", total)
 
 	return total
 }
