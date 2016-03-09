@@ -10,9 +10,10 @@ import (
 var db *sql.DB
 
 func main() {
-	Scheduler()
+	// put the scheduling operations in their own go routines so they can occur
+	// at the same time as listening/routing
+	go Scheduler()
 
-	fmt.Println("starting app")
 	db = OpenDBIfClosed()
 
 	http.HandleFunc("/", ViewAllRows)

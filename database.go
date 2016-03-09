@@ -13,6 +13,7 @@ type Hashtag struct {
 	Name      string  `json:"name"`
 	Sentiment string  `json:"sentiment"`
 	ID        []uint8 `json:"id"`
+	Created   string  `json:"created"`
 }
 
 func OpenDBIfClosed() *sql.DB {
@@ -45,7 +46,7 @@ func ViewRows() []Hashtag {
 
 	for rows.Next() {
 		var hashtag Hashtag
-		err = rows.Scan(&hashtag.Name, &hashtag.Sentiment, &hashtag.ID)
+		err = rows.Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment, &hashtag.Created)
 		checkErr(err)
 		hashtags = append(hashtags, hashtag)
 	}
@@ -82,7 +83,7 @@ func SelectRandomHashtag(sentiment string) Hashtag {
 	db = OpenDBIfClosed()
 
 	var hashtag Hashtag
-	err := db.QueryRow("SELECT * FROM hashtags WHERE sentiment = $1 ORDER BY random()", sentiment).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment)
+	err := db.QueryRow("SELECT * FROM hashtags WHERE sentiment = $1 ORDER BY random()", sentiment).Scan(&hashtag.ID, &hashtag.Name, &hashtag.Sentiment, &hashtag.Created)
 	checkErr(err)
 
 	return hashtag
