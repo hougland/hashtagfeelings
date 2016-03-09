@@ -1,14 +1,57 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/ChimeraCoder/anaconda"
+)
 
 func TestCreateSentimentQuery(t *testing.T) {
-
+	// var tweet1 anaconda.Tweet
+	// tweet1.
+	// var tweetSlice []anaconda.Tweet
 }
+
+// func CreateSentimentQuery(tweets []anaconda.Tweet) SentimentQuery {
+// 	var query SentimentQuery
+//
+// 	for _, tweet := range tweets {
+// 		query.Data = append(query.Data, FormatTweet(tweet))
+// 	}
+//
+// 	return query
+// }
 
 func TestFormatTweet(t *testing.T) {
+	var tweet1, tweet2 anaconda.Tweet
+	tweet1.Text = "test tweet"
+	tweet2.Text = ""
 
+	var tweetStruct1, tweetStruct2 TweetText
+	tweetStruct1.Text = "test tweet"
+	tweetStruct2.Text = ""
+
+	cases := []struct {
+		in   anaconda.Tweet
+		want TweetText
+	}{
+		{tweet1, tweetStruct1},
+		{tweet2, tweetStruct2},
+	}
+
+	for _, c := range cases {
+		got := FormatTweet(c.in)
+		if got != c.want {
+			t.Errorf("FormatTweet(%q) == %q, want %q", c.in, got, c.want)
+		}
+	}
 }
+
+// func FormatTweet(tweet anaconda.Tweet) TweetText {
+// 	tweetStruct := TweetText{Text: tweet.Text}
+//
+// 	return tweetStruct
+// }
 
 func TestSentimentAnalysis(t *testing.T) {
 
@@ -28,6 +71,7 @@ func TestIsSentimental(t *testing.T) {
 		{2.8, false, ""},        // barely neutral
 		{1.5, false, ""},        // barely neutral
 	}
+
 	for _, c := range cases {
 		got1, got2 := IsSentimental(c.in)
 		if got1 != c.want1 || got2 != c.want2 {
