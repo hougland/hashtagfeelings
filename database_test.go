@@ -19,10 +19,33 @@ func TestOpenDBIfClosed(t *testing.T) {
 	if result != db {
 		t.Errorf("OpenDBIfClosed() returned a different database")
 	}
-
 }
 
 func TestViewRows(t *testing.T) {
+	var err error
+	var mock sqlmock.Sqlmock
+	db, mock, err = sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	var hashtag1, hashtag2 Hashtag
+	hashtag1.Name = "happy"
+	hashtag2.Name = "sad"
+
+	var hashtags []Hashtag
+	hashtags = append(hashtags, hashtag1)
+	hashtags = append(hashtags, hashtag2)
+
+	rows := sqlmock.NewRows([]string{"id", "hashtag", "sentiment", "created"}).AddRow(1, "happy", "positive", "2016-03-08 23:57:51.645176+00").AddRow(2, "sad", "negative", "2016-03-06 23:57:51.645176+00")
+
+	mock.ExpectQuery("^SELECT (.+) FROM hashtags$").WillReturnRows(rows)
+
+	result := ViewRows()
+	if result[0].Name != hashtags[0].Name && result[1].Name != hashtags[1].Name {
+		t.Fatalf("ViewRows() failed. Expected: %v. Got: %v", hashtags, result)
+	}
 
 }
 
