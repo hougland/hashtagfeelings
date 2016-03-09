@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/ChimeraCoder/anaconda"
 	_ "github.com/lib/pq"
@@ -92,27 +93,25 @@ func SelectRandomHashtag(sentiment string) Hashtag {
 func PurgeDB(sentiment string) {
 	db = OpenDBIfClosed()
 
-	rows, err := db.Query("SELECT * FROM hashtags WHERE sentiment = $1", sentiment)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return
-		} else {
-			fmt.Println(err)
-			panic(err)
+	rows, err := db.Query("SELECT created FROM hashtags WHERE sentiment = $1 ORDER BY created DESC;", sentiment)
+	checkErr(err)
+	defer rows.Close()
+
+	// get total # of rows and save created date for
+	var count int
+	var tenthCreatedAt time.Time
+	for rows.Next() {
+		count++
+		if count == 10 {
+			rows.Scan(&tenthCreatedAt)
 		}
 	}
 
-	// var results []*sql.Rows
-
-	for rows.Next() {
-
+	if count < 10 {
+		return
 	}
 
-}
+	_, err = db.Exec("DELETE FROM hashtags WHERE sentiment = $1 AND created < $2", sentiment, tenthCreatedAt)
+	checkErr(err)
 
-// get all rows for a certain sentiment
-// if there's only 1 row, don't do anything else
-// count how many rows there are
-// if less than 10, return
-// sort the rows by created date? (can I do this with a string?)
-// delete whatever's left after first 10 rows
+}

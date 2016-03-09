@@ -12,7 +12,8 @@ var db *sql.DB
 func main() {
 	// put the scheduling operations in their own go routines so they can occur
 	// at the same time as listening/routing
-	go Scheduler()
+	go ScheduleUpdateHashtags()
+	go SchedulePurgeDB()
 
 	db = OpenDBIfClosed()
 
@@ -22,7 +23,6 @@ func main() {
 	http.HandleFunc("/updatehashtags", Updated)
 
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
-
 	checkErr(err)
 }
 
