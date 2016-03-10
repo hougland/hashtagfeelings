@@ -46,11 +46,31 @@ func TestViewRows(t *testing.T) {
 	if result[0].Name != hashtags[0].Name && result[1].Name != hashtags[1].Name {
 		t.Fatalf("ViewRows() failed. Expected: %v. Got: %v", hashtags, result)
 	}
-
 }
 
 func TestIsInTable(t *testing.T) {
-
+	// var err error
+	// var mock sqlmock.Sqlmock
+	// db, mock, err = sqlmock.New()
+	// if err != nil {
+	// 	t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	// }
+	// defer db.Close()
+	//
+	// var trend1, trend2 anaconda.Trend
+	// trend1.Name = "happy"
+	// trend2.Name = "neutral"
+	//
+	// row1 := sqlmock.NewRows([]string{"id"}).AddRow(1)
+	// // // _ = sqlmock.NewRows([]string{"id"})
+	// //
+	// mock.ExpectQuery("^SELECT id FROM hashtags WHERE hashtag = (.+)$").WillReturnRows(row1)
+	// // // mock.ExpectQuery("^SELECT id FROM hashtags WHERE hashtag = 'neutral'").WillReturnRows(row2)
+	//
+	// result := IsInTable(trend1)
+	// if result != true {
+	// 	t.Fatalf("IsInTable failing")
+	// }
 }
 
 func TestInsertHashtag(t *testing.T) {
