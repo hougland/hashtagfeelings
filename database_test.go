@@ -74,7 +74,24 @@ func TestIsInTable(t *testing.T) {
 }
 
 func TestInsertHashtag(t *testing.T) {
-
+	// 	var err error
+	// 	var mock sqlmock.Sqlmock
+	// 	db, mock, err = sqlmock.New()
+	// 	if err != nil {
+	// 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	// 	}
+	// 	defer db.Close()
+	//
+	// 	mock.ExpectBegin()
+	// 	mock.ExpectExec("^INSERT INTO hashtags$").WithArgs("happy", "positive")
+	// 	mock.ExpectCommit()
+	//
+	// 	InsertHashtag("happy", "positive")
+	//
+	// 	if err := mock.ExpectationsWereMet(); err != nil {
+	// 		t.Errorf("there were unfulfilled expections: %s", err)
+	// 	}
+	//
 }
 
 func TestSelectRandomHashtag(t *testing.T) {
