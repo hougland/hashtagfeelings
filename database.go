@@ -21,7 +21,9 @@ func OpenDBIfClosed() *sql.DB {
 	var err error
 
 	if db == nil {
-		dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("RDS_USERNAME"), os.Getenv("RDS_PASSWORD"), os.Getenv("RDS_DB_NAME"), os.Getenv("RDS_HOSTNAME"), os.Getenv("RDS_PORT"))
+		// dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("RDS_USERNAME"), os.Getenv("RDS_PASSWORD"), os.Getenv("RDS_DB_NAME"), os.Getenv("DATABASE_URL"), os.Getenv("RDS_PORT"))
+		dbinfo := fmt.Sprintf("host=%s", os.Getenv("DATABASE_URL"))
+
 		db, err = sql.Open("postgres", dbinfo)
 		checkErr(err)
 	}
