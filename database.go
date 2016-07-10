@@ -26,6 +26,9 @@ func OpenDBIfClosed() *sql.DB {
 		checkErr(err)
 	}
 
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS hashtags (id serial primary key, hashtag varchar(180) unique, sentiment char(9), created timestamp with time zone default current_timestamp)")
+	checkErr(err)
+
 	err = db.Ping()
 	if err != nil {
 		// dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("RDS_USERNAME"), os.Getenv("RDS_PASSWORD"), os.Getenv("RDS_DB_NAME"), os.Getenv("RDS_HOSTNAME"), os.Getenv("RDS_PORT"))
