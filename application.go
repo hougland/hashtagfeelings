@@ -42,6 +42,7 @@ func UpdateHashtags() {
 	}
 }
 
+// TODO: print more details about errors
 func checkErr(err error) {
 	if err != nil {
 		if err == sql.ErrNoRows {

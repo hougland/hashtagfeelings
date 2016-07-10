@@ -17,7 +17,7 @@ func ViewAllRows(w http.ResponseWriter, r *http.Request) {
 
 func Positive(w http.ResponseWriter, r *http.Request) {
 	hashtag := SelectRandomHashtag("positive")
-	defer db.Close()
+	// defer db.Close()
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
