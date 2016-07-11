@@ -12,8 +12,8 @@ var db *sql.DB
 func main() {
 	// put the scheduling operations in their own go routines so they can occur
 	// at the same time as listening/routing
-	// go ScheduleUpdateHashtags()
-	// go SchedulePurgeDB()
+	go ScheduleUpdateHashtags()
+	go SchedulePurgeDB()
 
 	db = OpenDBIfClosed()
 
